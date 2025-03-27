@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import heroimg from "../../assets/heroimg.webp";
 const HeroSection = () => {
   return (
-    <section className="bg-[#E9F1FA] py-36 px-4 md:px-20 grid grid-cols-1 md:grid-cols-2 gap-60 items-center">
+    <section className="bg-[#E9F1FA] py-34 px-4 md:px-20 grid grid-cols-1 md:grid-cols-2 gap-60 items-center">
       <div>
         <h1 className="text-3xl md:text-5xl font-bold mb-4">
           Connect with Skilled <br /> Workers & Service Providers
