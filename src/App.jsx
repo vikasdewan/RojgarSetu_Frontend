@@ -59,10 +59,9 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        {/* <Route path="/about" element={<About />} /> */}
-        {/* <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
+        <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
         <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
-        <Route path="/verify-otp" element={!isAuthenticated ? <OTPVerification /> : <Navigate to="/dashboard" />} /> */}
+        <Route path="/verify-otp" element={!isAuthenticated ? <OTPVerification /> : <Navigate to="/dashboard" />} />
 
         {/* Protected Routes */}
         {/* <Route 
