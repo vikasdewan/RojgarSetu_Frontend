@@ -16,9 +16,9 @@ const OTPVerification = () => {
   const userId = location.state?.userId;
   
   useEffect(() => {
-    // if (!userId) {
-    //   navigate('/login');
-    // }
+    if (!userId) {
+      navigate('/login');
+    }
     
     const timer = setInterval(() => {
       setCountdown(prevCountdown => {

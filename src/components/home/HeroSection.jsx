@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import heroimg from "../../assets/heroimg.webp";
+import heroimg from "../../assets/heroimg1.jpg";
 const HeroSection = () => {
   return (
     <section className="bg-[#E9F1FA] py-34 px-4 md:px-20 grid grid-cols-1 md:grid-cols-2 gap-60 items-center">
@@ -20,7 +20,7 @@ const HeroSection = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
         height={400}
-        width={400}
+        width={450}
         src={heroimg}
         alt="Workers Hero"
         className="rounded shadow-md"

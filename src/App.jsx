@@ -36,6 +36,7 @@ import OwnerProfile from './components/Profile/OwnerProfile';
 
 // Pages
 import Home from './pages/Home';
+import Navbar from './components/home/Navbar';
 // import About from './pages/About';
 
 function App() {
@@ -75,6 +76,9 @@ function App() {
             ) : <Navigate to="/login" />
           } 
         /> */}
+        <Route path='/worker/dashboard' element={<WorkerDashboard />} />
+        <Route path='/contractor/dashboard' element={<ContractorDashboard />} />
+        <Route path='/owner/dashboard' element={<OwnerDashboard />} />
 
         {/* Worker Routes */}
         {/* <Route 

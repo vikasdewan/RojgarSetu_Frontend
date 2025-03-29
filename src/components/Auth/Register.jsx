@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { register } from '../../redux/actions';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast'; // Import react-hot-toast
+import Layout from '../Layout/Layout'; // Import your Layout component
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -52,6 +53,7 @@ const Register = () => {
   };
 
   return (
+    <Layout>
     <motion.section
       className="min-h-screen flex items-center justify-center bg-[#E9F1FA] py-12 px-4"
       initial={{ opacity: 0, y: -20 }}
@@ -275,6 +277,7 @@ const Register = () => {
         </form>
       </div>
     </motion.section>
+    </Layout>
   );
 };
 

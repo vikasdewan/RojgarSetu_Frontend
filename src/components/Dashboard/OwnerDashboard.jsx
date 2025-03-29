@@ -1,224 +1,392 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getOwnerVehicleApplications, getRecommendedVehicleForms } from '../../redux/actions';
-import VehicleApplicationCard from '../Vehicle/VehicleApplicationCard';
-import VehicleFormCard from '../Vehicle/VehicleFormCard';
+import axios from 'axios';
 
 const OwnerDashboard = () => {
   const dispatch = useDispatch();
-  const { applications, loading: appLoading } = useSelector(state => state.vehicleApplications);
-  const { recommendedForms, loading: recLoading } = useSelector(state => state.recommendations);
   const { user } = useSelector(state => state.auth);
+  const [loading, setLoading] = useState(true);
+  // const [dashboardData, setDashboardData] = useState({
+  //   totalForms: 1,
+  //   pendingForms: 1,
+  //   acceptedForms: 1,
+  //   rejectedForms: 1,
+  //   recentApplications: [],
+  //   notifications: []
+  // });
   
-  const [activeTab, setActiveTab] = useState('pending');
-
   useEffect(() => {
-    dispatch(getOwnerVehicleApplications());
-    dispatch(getRecommendedVehicleForms());
-  }, [dispatch]);
-
-  // Filter applications by status
-  const pendingApplications = applications.filter(app => app.status === 'pending');
-  const acceptedApplications = applications.filter(app => app.status === 'accepted');
-  const rejectedApplications = applications.filter(app => app.status === 'rejected');
-
-  const renderApplications = () => {
-    let appsToRender = [];
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('/api/owner/dashboard');
+        setDashboardData(res.data);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    switch(activeTab) {
-      case 'pending':
-        appsToRender = pendingApplications;
-        break;
-      case 'accepted':
-        appsToRender = acceptedApplications;
-        break;
-      case 'rejected':
-        appsToRender = rejectedApplications;
-        break;
-      default:
-        appsToRender = pendingApplications;
-    }
-    
-    if (appLoading) {
-      return <div className="text-center py-10">Loading applications...</div>;
-    }
-    
-    if (appsToRender.length === 0) {
-      return (
-        <div className="text-center py-10">
-          <p className="text-gray-500">No applications found in this category.</p>
-          {activeTab === 'pending' && (
-            <Link to="/owner/vehicle-forms" className="mt-4 inline-block text-blue-600 hover:text-blue-800">
-              Browse available vehicle forms
-            </Link>
-          )}
-        </div>
-      );
-    }
-    
+    fetchData();
+  }, []);
+  
+  if (loading) {
     return (
-      <div className="grid grid-cols-1 gap-4">
-        {appsToRender.map(application => (
-          <VehicleApplicationCard key={application._id} application={application} />
-        ))}
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
+  }
+  
+  const dashboardData = {
+    totalForms: 10,
+    pendingForms: 3,
+    acceptedForms: 5,
+    rejectedForms: 2,
+    recentApplications: [
+      {
+        _id: '1',
+        vehicleForm: {
+          title: 'Truck Rental',
+          type: 'Truck',
+          brand: 'Tata',
+          location: 'Mumbai',
+          payscale: 1500,
+        },
+        status: 'accepted',
+        appliedAt: '2023-10-01T10:00:00Z',
+      },
+      {
+        _id: '2',
+        vehicleForm: {
+          title: 'Excavator Hire',
+          type: 'Excavator',
+          brand: 'JCB',
+          location: 'Delhi',
+          payscale: 2000,
+        },
+        status: 'pending',
+        appliedAt: '2023-10-02T12:00:00Z',
+      },
+    ],
+    notifications: [
+      {
+        _id: '1',
+        message: 'Your application for Truck Rental has been accepted.',
+        createdAt: '2023-10-03T08:00:00Z',
+        isRead: false,
+      },
+      {
+        _id: '2',
+        message: 'New vehicle added to your inventory.',
+        createdAt: '2023-10-02T15:00:00Z',
+        isRead: true,
+      },
+    ],
   };
 
+  const { totalForms, pendingForms, acceptedForms, rejectedForms, recentApplications, notifications } = dashboardData;
+  
   return (
-    <div className="container mx-auto px-4 py-8 mt-16">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Vehicle Owner Dashboard</h1>
-          <p className="text-gray-600">Welcome back, {user?.name}</p>
-        </div>
-        
-        {user?.profileCompletion < 90 && (
-          <div className="mt-4 md:mt-0 bg-yellow-50 border-l-4 border-yellow-400 p-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  Your profile is only {user.profileCompletion}% complete. 
-                  <Link to="/owner/profile" className="font-medium underline text-yellow-700 hover:text-yellow-600">
-                    Complete your profile
-                  </Link> to apply for vehicle forms.
-                </p>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-gray-900">Vehicle/Instrument Owner Dashboard</h1>
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-gray-500">Welcome, {user?.name}</span>
+            <Link to="/owner/profile" className="text-sm font-medium text-blue-600 hover:text-blue-500">
+              View Profile
+            </Link>
           </div>
-        )}
-      </div>
+        </div>
+      </header>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="border-b border-gray-200">
-              <nav className="flex -mb-px">
-                <button
-                  onClick={() => setActiveTab('pending')}
-                  className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
-                    activeTab === 'pending'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  Pending
-                  {pendingApplications.length > 0 && (
-                    <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                      {pendingApplications.length}
-                    </span>
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveTab('accepted')}
-                  className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
-                    activeTab === 'accepted'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  Accepted
-                  {acceptedApplications.length > 0 && (
-                    <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                      {acceptedApplications.length}
-                    </span>
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveTab('rejected')}
-                  className={`py-4 px-6 text-center border-b-2 font-medium text-sm ${
-                    activeTab === 'rejected'
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                  }`}
-                >
-                  Rejected
-                  {rejectedApplications.length > 0 && (
-                    <span className="ml-2 bg-gray-100 text-gray-700 py-0.5 px-2 rounded-full text-xs">
-                      {rejectedApplications.length}
-                    </span>
-                  )}
-                </button>
-              </nav>
-            </div>
-            <div className="p-4">
-              {renderApplications()}
-            </div>
-          </div>
-        </div>
-        
-        <div>
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="px-4 py-5 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Recommended Vehicle Forms
-              </h3>
-            </div>
-            <div className="p-4">
-              {recLoading ? (
-                <div className="text-center py-10">Loading recommendations...</div>
-              ) : recommendedForms.length === 0 ? (
-                <div className="text-center py-10">
-                  <p className="text-gray-500">No recommended forms found.</p>
-                  <p className="text-gray-500 text-sm mt-2">Complete your profile to get better recommendations.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {recommendedForms.slice(0, 3).map(form => (
-                    <VehicleFormCard key={form._id} form={form} compact={true} />
-                  ))}
-                  <div className="text-center pt-2">
-                    <Link to="/owner/vehicle-forms" className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                      View all vehicle forms
-                    </Link>
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          {/* Dashboard Stats */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
+                    <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Total Forms
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium text-gray-900">
+                          {totalForms}
+                        </div>
+                      </dd>
+                    </dl>
                   </div>
                 </div>
-              )}
+              </div>
+            </div>
+            
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 bg-yellow-500 rounded-md p-3">
+                    <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Pending
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium text-gray-900">
+                          {pendingForms}
+                        </div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
+                    <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Accepted
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium text-gray-900">
+                          {acceptedForms}
+                        </div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="px-4 py-5 sm:p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 bg-red-500 rounded-md p-3">
+                    <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Rejected
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium text-gray-900">
+                          {rejectedForms}
+                        </div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
-          <div className="bg-white rounded-lg shadow overflow-hidden mt-6">
-            <div className="px-4 py-5 border-b border-gray-200">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                Profile Completion
-              </h3>
+          {/* Recent Applications */}
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-gray-900">Recent Applications</h2>
+              <Link
+                to="/vehicle/applications"
+                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+              >
+                View All
+              </Link>
             </div>
-            <div className="p-4">
-              <div className="mb-2 flex justify-between">
-                <span className="text-sm font-medium text-gray-700">{user?.profileCompletion || 0}% Complete</span>
-                {user?.profileCompletion >= 90 ? (
-                  <span className="text-xs text-green-600 font-medium">✓ Eligible to apply</span>
-                ) : (
-                  <span className="text-xs text-yellow-600 font-medium">Need {90 - (user?.profileCompletion || 0)}% more</span>
-                )}
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5">
-                <div 
-                  className={`h-2.5 rounded-full ${user?.profileCompletion >= 90 ? 'bg-green-600' : 'bg-blue-600'}`}
-                  style={{ width: `${user?.profileCompletion || 0}%` }}
-                ></div>
-              </div>
-              
-              {user?.profileCompletion < 90 && (
-                <div className="mt-4">
-                  <Link 
-                    to="/owner/profile" 
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            
+            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+              {recentApplications && recentApplications.length > 0 ? (
+                <ul className="divide-y divide-gray-200">
+                  {recentApplications.map(application => (
+                    <li key={application._id}>
+                      <div className="px-4 py-4 sm:px-6">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-sm font-medium text-blue-600 truncate">{application.vehicleForm.title}</h3>
+                            <p className="mt-1 text-xs text-gray-500">
+                              {application.vehicleForm.type} - {application.vehicleForm.brand}
+                            </p>
+                          </div>
+                          <div className="ml-2 flex-shrink-0 flex">
+                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              application.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                              application.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                              'bg-yellow-100 text-yellow-800'
+                            }`}>
+                              {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="mt-2 sm:flex sm:justify-between">
+                          <div className="sm:flex">
+                            <p className="flex items-center text-sm text-gray-500">
+                              <svg className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                              </svg>
+                              {application.vehicleForm.location}
+                            </p>
+                            <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
+                              <svg className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
+                              </svg>
+                              ₹{application.vehicleForm.payscale}/day
+                            </p>
+                          </div>
+                          <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                            <svg className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                            </svg>
+                            <span>
+                              Applied on {new Date(application.appliedAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="px-4 py-5 sm:px-6 text-center text-gray-500">
+                  <p>You haven't applied to any vehicle/instrument forms yet.</p>
+                  <Link
+                    to="/vehicle/browse"
+                    className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                   >
-                    Complete Profile
+                    Browse Available Forms
                   </Link>
                 </div>
               )}
             </div>
           </div>
+          
+          {/* Recent Notifications */}
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-gray-900">Recent Notifications</h2>
+              <Link
+                to="/notifications"
+                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+              >
+                View All
+              </Link>
+            </div>
+            
+            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+              {notifications && notifications.length > 0 ? (
+                <ul className="divide-y divide-gray-200">
+                  {notifications.map(notification => (
+                    <li key={notification._id} className={notification.isRead ? '' : 'bg-blue-50'}>
+                      <div className="px-4 py-4 sm:px-6">
+                        <div className="flex items-center">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {notification.message}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              {new Date(notification.createdAt).toLocaleString()}
+                            </p>
+                          </div>
+                          {!notification.isRead && (
+                            <div className="ml-4 flex-shrink-0">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                New
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="px-4 py-5 sm:px-6 text-center text-gray-500">
+                  <p>You don't have any notifications yet.</p>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Available Vehicles/Instruments */}
+          <div className="mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-medium text-gray-900">Your Vehicles/Instruments</h2>
+              <Link
+                to="/owner/vehicles/add"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                Add New
+              </Link>
+            </div>
+            
+            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-4">
+                {/* Sample vehicle card - replace with actual data */}
+                <div className="bg-white overflow-hidden shadow rounded-lg border">
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-gray-900">Heavy Duty Truck</h3>
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        Available
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">Model: XC 2000</p>
+                      <p className="text-sm text-gray-500">Capacity: 10 tons</p>
+                    </div>
+                    <div className="mt-4 flex justify-end">
+                      <button className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white overflow-hidden shadow rounded-lg border">
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-gray-900">Excavator</h3>
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        In Use
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">Model: E-500</p>
+                      <p className="text-sm text-gray-500">Capacity: Medium</p>
+                    </div>
+                    <div className="mt-4 flex justify-end">
+                      <button className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
