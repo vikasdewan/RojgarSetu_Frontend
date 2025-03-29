@@ -239,6 +239,146 @@ export const updateWorkerProfile = (formData) => async dispatch => {
     throw err;
   }
 };
+
+// Update Worker Image
+export const updateWorkerImage = (formData) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    
+    const res = await axios.put(`${API_URL}/worker/profile/image`, formData, config);
+    
+    dispatch({
+      type: 'UPDATE_WORKER_IMAGE',
+      payload: res.data
+    });
+    
+    dispatch(setAlert('Worker Image Updated', 'success'));
+    
+    return res.data;
+  } catch (err) {
+    const errors = err.response.data.errors;
+    
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+    
+    dispatch({
+      type: 'PROFILE_ERROR',
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+    
+    throw err;
+  }
+};
+
+// Update Worker Resume
+export const updateWorkerResume = (formData) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    
+    const res = await axios.put(`${API_URL}/worker/profile/resume`, formData, config);
+    
+    dispatch({
+      type: 'UPDATE_WORKER_RESUME',
+      payload: res.data
+    });
+    
+    dispatch(setAlert('Worker Resume Updated', 'success'));
+    
+    return res.data;
+  } catch (err) {
+    const errors = err.response.data.errors;
+    
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+    
+    dispatch({
+      type: 'PROFILE_ERROR',
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+    
+    throw err;
+  }
+};
+
+// Update Contractor Image
+export const updateContractorImage = (formData) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    
+    const res = await axios.put(`${API_URL}/contractor/profile/image`, formData, config);
+    
+    dispatch({
+      type: 'UPDATE_CONTRACTOR_IMAGE',
+      payload: res.data
+    });
+    
+    dispatch(setAlert('Contractor Image Updated', 'success'));
+    
+    return res.data;
+  } catch (err) {
+    const errors = err.response.data.errors;
+    
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+    
+    dispatch({
+      type: 'PROFILE_ERROR',
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+    
+    throw err;
+  }
+};
+
+// Update Owner Image
+export const updateOwnerImage = (formData) => async dispatch => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+    
+    const res = await axios.put(`${API_URL}/owner/profile/image`, formData, config);
+    
+    dispatch({
+      type: 'UPDATE_OWNER_IMAGE',
+      payload: res.data
+    });
+    
+    dispatch(setAlert('Owner Image Updated', 'success'));
+    
+    return res.data;
+  } catch (err) {
+    const errors = err.response.data.errors;
+    
+    if (errors) {
+      errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
+    }
+    
+    dispatch({
+      type: 'PROFILE_ERROR',
+      payload: { msg: err.response.statusText, status: err.response.status }
+    });
+    
+    throw err;
+  }
+};
 // Update contractor Profile
 export const updateContractorProfile = (formData) => async dispatch => {
   try {

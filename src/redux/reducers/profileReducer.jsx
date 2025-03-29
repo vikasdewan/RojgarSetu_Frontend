@@ -34,6 +34,44 @@ const initialState = {
           workerProfile: payload,
           loading: false
         };
+      case 'UPDATE_WORKER_IMAGE':
+        return {
+          ...state,
+          workerProfile: payload,
+          loading: false
+        };
+      case 'UPDATE_WORKER_RESUME':
+        return {
+          ...state,
+          workerProfile: payload,
+          loading: false
+        };
+      case 'UPDATE_OWNER_PROFILE':
+        return {
+          ...state,
+          ownerProfile: payload,
+          loading: false
+        };    
+    
+      case 'UPDATE_OWNER_IMAGE':
+        return {
+          ...state,
+          ownerProfile: payload,
+          loading: false
+        };
+      case 'UPDATE_CONTRACTOR_PROFILE':
+        return{
+          ...state,
+          contractorProfile: payload,
+          loading: false
+        };
+      case 'UPDATE_CONTRACTOR_IMAGE':
+        return{
+          ...state,
+          contractorProfile: payload,
+          loading: false
+        };
+
       case 'PROFILE_ERROR':
         return {
           ...state,

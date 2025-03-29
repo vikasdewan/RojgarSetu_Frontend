@@ -76,9 +76,13 @@ function App() {
             ) : <Navigate to="/login" />
           } 
         /> */}
+        {/* For Testing Purposes */}
         <Route path='/worker/dashboard' element={<WorkerDashboard />} />
         <Route path='/contractor/dashboard' element={<ContractorDashboard />} />
         <Route path='/owner/dashboard' element={<OwnerDashboard />} />
+        <Route path='/worker/profile' element={<WorkerProfile />} />
+        <Route path='/contractor/profile' element={<ContractorProfile />} />
+        <Route path='/owner/profile' element={<OwnerProfile />} />
 
         {/* Worker Routes */}
         {/* <Route 
