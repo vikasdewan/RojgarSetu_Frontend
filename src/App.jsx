@@ -19,8 +19,8 @@ import ContractorProfile from './components/Profile/ContractorProfile';
 import OwnerProfile from './components/Profile/OwnerProfile';
 
 // // Job Components
-// import JobPostingForm from './components/Job/JobPostingForm';
-// import JobApplicationForm from './components/Job/JobApplicationForm';
+import JobPostingForm from './components/Job/JobPostingForm';
+import JobApplicationForm from './components/Job/JobApplicationForm';
 
 // // Vehicle Components
 // import VehicleForm from './components/Vehicle/VehicleForm';
@@ -83,7 +83,8 @@ function App() {
         <Route path='/worker/profile' element={<WorkerProfile />} />
         <Route path='/contractor/profile' element={<ContractorProfile />} />
         <Route path='/owner/profile' element={<OwnerProfile />} />
-
+        <Route path='/job/create' element={<JobPostingForm />} />
+        <Route path='/job/apply/' element={<JobApplicationForm />} />
         {/* Worker Routes */}
         {/* <Route 
           path="/worker/profile" 

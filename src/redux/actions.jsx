@@ -1,7 +1,8 @@
+// action.jsx
 import axios from 'axios';
 
-// API URL
-const API_URL = 'http://localhost:5000/api';
+// Update API URL to match /api/v1
+const API_URL = 'http://localhost:5000/api/v1';
 
 // Set auth token
 export const setAuthToken = token => {
