@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { verifyOTP } from '../../redux/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { useVerifyOtpMutation } from '@/redux/api/authApiSlice';
 
 const OTPVerification = () => {
   const [otp, setOtp] = useState('');
@@ -12,8 +12,10 @@ const OTPVerification = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
-  const userId = location.state?.userId;
+  const {verifyOTP} = useVerifyOtpMutation();
+  // const userId = location.state?.userId;
+  const {userId} = useSelector(state=> state.auth);
+  console.log("UserId at Otp verification :: ",userId)
   
   useEffect(() => {
     if (!userId) {

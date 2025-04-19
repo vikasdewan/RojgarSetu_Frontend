@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { register } from '../../redux/actions';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast'; // Import react-hot-toast
 import Layout from '../Layout/Layout'; // Import your Layout component
+import { useRegisterMutation } from '@/redux/api/authApiSlice';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,14 +13,14 @@ const Register = () => {
     phone: '',
     password: '',
     confirmPassword: '',
-    userType: 'worker' // Default user type
+    userType: 'Worker' // Default user type
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const { name, email, phone, password, confirmPassword, userType } = formData;
-
+  const {register} = useRegisterMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -38,9 +38,9 @@ const Register = () => {
 
     setLoading(true);
     setError('');
-
+6
     try {
-      const { userId } = await dispatch(register({ name, email, phone, password }, userType));
+      const { userId } = await dispatch(register({ name, email, phone, password, userType }));
       toast.success('Registration successful!');
       navigate('/verify-otp', { state: { userId } });
     } catch (err) {
@@ -214,7 +214,7 @@ const Register = () => {
               </label>
             </div>
             <div className="md:w-2/3 flex items-center gap-4">
-              {['worker', 'contractor', 'owner'].map((type) => (
+              {['Worker', 'Contractor', 'Owner'].map((type) => (
                 <label
                   key={type}
                   className="flex items-center text-gray-700 font-medium cursor-pointer"

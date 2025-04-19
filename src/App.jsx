@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkAuth } from './redux/actions';
-
+import { useGetCurrentUserQuery } from './redux/api/authApiSlice';
 // Auth Components
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
@@ -37,15 +36,18 @@ import JobApplicationForm from './components/Job/JobApplicationForm';
 // Pages
 import Home from './pages/Home';
 import Navbar from './components/home/Navbar';
+import SingleJobPost from './components/Job/SingleJobPost';
+import { setCredentials } from './redux/slices/authSlice';
 // import About from './pages/About';
 
 function App() {
+  const {data,isLoading} = useGetCurrentUserQuery();
   const dispatch = useDispatch();
   const { isAuthenticated, userType, loading } = useSelector(state => state.auth);
 
   useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
+    if(data) dispatch(setCredentials(data));
+  }, [data]);
 
   if (loading) {
     return (
@@ -62,8 +64,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
         <Route path="/register" element={!isAuthenticated ? <Register /> : <Navigate to="/dashboard" />} />
-        <Route path="/verify-otp" element={!isAuthenticated ? <OTPVerification /> : <Navigate to="/dashboard" />} />
-
+        {/* <Route path="/verify-otp" element={!isAuthenticated ? <OTPVerification /> : <Navigate to="/dashboard" />} /> */}
+        <Route path='/verify-otp' element={<OTPVerification />} />
         {/* Protected Routes */}
         {/* <Route 
           path="/dashboard" 
@@ -85,6 +87,7 @@ function App() {
         <Route path='/owner/profile' element={<OwnerProfile />} />
         <Route path='/job/create' element={<JobPostingForm />} />
         <Route path='/job/apply/' element={<JobApplicationForm />} />
+        <Route path='/job/view/:id' element={<SingleJobPost />} />
         {/* Worker Routes */}
         {/* <Route 
           path="/worker/profile" 

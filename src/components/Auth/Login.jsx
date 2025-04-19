@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/actions';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast'; // Import react-hot-toast
 import Layout from '../Layout/Layout';
+import { useLoginMutation } from '@/redux/api/authApiSlice';
+import { setCredentials } from '@/redux/slices/authSlice';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -18,7 +19,7 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const [login,{isLoading}] = useLoginMutation();
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -27,7 +28,8 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      await dispatch(login(email, password));
+      const data = await dispatch(login({email,password}));
+      dispatch(setCredentials(data));
       toast.success('Logged in successfully!');
       navigate('/dashboard');
     } catch (err) {

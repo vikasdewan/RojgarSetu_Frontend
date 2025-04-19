@@ -4,48 +4,48 @@ import { getNotifications, markNotificationAsRead } from '../../redux/actions';
 import NotificationItem from './NotificationItem.jsx';
 
 const NotificationBell = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { notifications, loading } = useSelector(state => state.notifications);
-  const dispatch = useDispatch();
-  const dropdownRef = useRef(null);
+  // const [isOpen, setIsOpen] = useState(false);
+  // // const { notifications, loading } = useSelector(state => state.notifications);
+  // const dispatch = useDispatch();
+  // const dropdownRef = useRef(null);
 
-  const unreadCount = notifications.filter(notification => !notification.isRead).length;
+  // const unreadCount = notifications.filter(notification => !notification.isRead).length;
 
-  useEffect(() => {
-    dispatch(getNotifications());
+  // useEffect(() => {
+  //   dispatch(getNotifications());
     
-    // Set up polling for notifications
-    const interval = setInterval(() => {
-      dispatch(getNotifications());
-    }, 30000); // Poll every 30 seconds
+  //   // Set up polling for notifications
+  //   const interval = setInterval(() => {
+  //     dispatch(getNotifications());
+  //   }, 30000); // Poll every 30 seconds
     
-    return () => clearInterval(interval);
-  }, [dispatch]);
+  //   return () => clearInterval(interval);
+  // }, [dispatch]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  //       setIsOpen(false);
+  //     }
+  //   };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  // const toggleDropdown = () => {
+  //   setIsOpen(!isOpen);
+  // };
 
-  const handleNotificationClick = (id) => {
-    dispatch(markNotificationAsRead(id));
-  };
+  // const handleNotificationClick = (id) => {
+  //   dispatch(markNotificationAsRead(id));
+  // };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <button 
+    <div className="relative">
+      {/* <button 
         className="relative p-2 text-gray-600 hover:text-gray-800 focus:outline-none"
         onClick={toggleDropdown}
       >
@@ -85,7 +85,7 @@ const NotificationBell = () => {
             </a>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
