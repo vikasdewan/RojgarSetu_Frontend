@@ -28,19 +28,29 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      const data = await dispatch(login({email,password}));
-      dispatch(setCredentials(data));
+      const res = await login({ email, password }).unwrap(); // ⬅️ important
+      console.log("Login response :: ", res);
+      console.log("Response user type:", typeof res.user); // Should be 'object'
+
+      dispatch(setCredentials({
+        user: res.user,
+        userType: res.user.userType,
+        token:   res.token
+      }));
+      console.log("Login response after dispatch :: ", res.user.userType,res.token,res.user);
+      
       toast.success('Logged in successfully!');
       navigate('/dashboard');
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed. Please check your credentials.';
+      const msg =
+        err?.data?.message || 'Login failed. Please check your credentials.';
       setError(msg);
       toast.error(msg);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <Layout>
     <motion.section

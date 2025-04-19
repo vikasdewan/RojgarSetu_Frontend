@@ -10,10 +10,12 @@ const authSlice = createSlice({
   },
   reducers: {
     setCredentials: (state, action) => {
-      state.user = action.payload;
-      state.userType = action.payload.userType;
-      state.token = action.payload.token;
+      const { user, token } = action.payload;
+      state.user = typeof user === 'string' ? JSON.parse(user) : user;
+      state.userType = user.userType;
+      state.token = token;
     },
+    
     logout: (state) => {
       state.user = null;
       state.userType = null;

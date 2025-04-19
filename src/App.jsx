@@ -41,13 +41,20 @@ import { setCredentials } from './redux/slices/authSlice';
 // import About from './pages/About';
 
 function App() {
-  const {data,isLoading} = useGetCurrentUserQuery();
   const dispatch = useDispatch();
   const { isAuthenticated, userType, loading } = useSelector(state => state.auth);
 
-  useEffect(() => {
-    if(data) dispatch(setCredentials(data));
-  }, [data]);
+  const { data: me, isSuccess } = useGetCurrentUserQuery();
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      dispatch(setCredentials({
+        user: me.user,
+        userType: me.user.userType,
+        token: me.token
+      }));
+    }
+  }, [isSuccess, me]);
 
   if (loading) {
     return (
