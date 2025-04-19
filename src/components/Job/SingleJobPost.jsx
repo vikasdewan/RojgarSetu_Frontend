@@ -5,7 +5,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 // Assume these actions are defined in your redux actions file
-import { updateJobPosting, deleteJobPosting } from '../../redux/actions';
+// import { updateJobPosting, deleteJobPosting } from '../../redux/actions';
 import Layout from '../Layout/Layout';
 
 const SingleJobPost = () => {
@@ -66,7 +66,7 @@ const SingleJobPost = () => {
     setSubmitting(true);
     setError('');
     try {
-      await dispatch(updateJobPosting(id, formData));
+      // await dispatch(updateJobPosting(id, formData));
       toast.success('Job post updated successfully!');
       // Optionally refresh job details or navigate back to dashboard
       navigate('/contractor/dashboard');
@@ -84,7 +84,7 @@ const SingleJobPost = () => {
     if (!window.confirm('Are you sure you want to delete this job post?')) return;
     setSubmitting(true);
     try {
-      await dispatch(deleteJobPosting(id));
+      // await dispatch(deleteJobPosting(id));
       toast.success('Job post deleted successfully!');
       navigate('/contractor/dashboard');
     } catch (err) {

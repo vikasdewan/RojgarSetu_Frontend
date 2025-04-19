@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import { applyForJob } from '../../redux/actions';
+// import { applyForJob } from '../../redux/actions';
 import axios from 'axios';
 
 const JobApplicationForm = () => {
@@ -55,7 +55,7 @@ const JobApplicationForm = () => {
     setError('');
     
     try {
-      await dispatch(applyForJob(jobPostId, formData));
+      // await dispatch(applyForJob(jobPostId, formData));
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Error submitting application. Please try again.');

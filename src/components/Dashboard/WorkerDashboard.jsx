@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getWorkerDashboard } from '../../redux/actions';
 import Layout from '../Layout/Layout';
 
 const WorkerDashboard = () => {
@@ -10,9 +9,9 @@ const WorkerDashboard = () => {
   const { user } = useSelector(state => state.auth);
   const [activeTab, setActiveTab] = useState('applied');
   
-  useEffect(() => {
-    dispatch(getWorkerDashboard());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getWorkerDashboard());
+  // }, [dispatch]);
   
   // if (loading || !workerDashboard) {
   //   return (

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { getOwnerProfile, updateOwnerProfile } from "../../redux/actions"
+// import { getOwnerProfile, updateOwnerProfile } from "../../redux/actions"
 import { AlertCircle, CheckCircle, Edit, Eye, FileText, MapPin, Plus, Upload, User, X } from "lucide-react"
 
 const OwnerProfile = () => {
@@ -56,7 +56,7 @@ const OwnerProfile = () => {
   const ownerProfile = sampleOwnerProfile
   // Fetch profile data from Redux
   useEffect(() => {
-    dispatch(getOwnerProfile())
+    // dispatch(getOwnerProfile())
   }, [dispatch])
 
   // Set form data from Redux state when available
@@ -110,7 +110,7 @@ const OwnerProfile = () => {
    
        setUploadingImage(true)
        try {
-         const response = await dispatch(updateOwnerImage(formDataObj))
+        //  const response = await dispatch(updateOwnerImage(formDataObj))
          setFormData((prevState) => ({
            ...prevState,
            image: response.payload.imageUrl,

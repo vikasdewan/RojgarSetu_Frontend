@@ -9,7 +9,14 @@ import { recommendationApiSlice } from './api/recommendationApiSlice';
 import authReducer from './slices/authSlice';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from '@reduxjs/toolkit';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist';
 
 const persistConfig = {
   key: 'root',

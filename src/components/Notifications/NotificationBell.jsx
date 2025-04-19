@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getNotifications, markNotificationAsRead } from '../../redux/actions';
+// import { getNotifications, markNotificationAsRead } from '../../redux/actions';
 import NotificationItem from './NotificationItem.jsx';
 
 const NotificationBell = () => {

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getWorkerProfile, updateWorkerProfile, updateWorkerImage, updateWorkerResume } from "../../redux/actions"
+// import { getWorkerProfile, updateWorkerProfile, updateWorkerImage, updateWorkerResume } from "../../redux/actions"
 import { Activity, AlertCircle, CheckCircle, Edit, Eye, FileText, Upload, User } from "lucide-react"
 
 const WorkerProfile = () => {
@@ -46,7 +46,7 @@ const WorkerProfile = () => {
 
   // Get profile data from Redux
   useEffect(() => {
-    dispatch(getWorkerProfile())
+    // dispatch(getWorkerProfile())
   }, [dispatch])
 
   // Set form data from Redux state
@@ -111,7 +111,7 @@ const WorkerProfile = () => {
 
     setUploadingImage(true)
     try {
-      const response = await dispatch(updateWorkerImage(formDataObj))
+      // const response = await dispatch(updateWorkerImage(formDataObj))
       setFormData((prevState) => ({
         ...prevState,
         image: response.payload.imageUrl,
@@ -130,7 +130,7 @@ const WorkerProfile = () => {
 
     setUploadingResume(true)
     try {
-      const response = await dispatch(updateWorkerResume(file))
+      // const response = await dispatch(updateWorkerResume(file))
       setFormData((prevState) => ({
         ...prevState,
         resume: response.payload.resumeUrl,
@@ -150,7 +150,7 @@ const WorkerProfile = () => {
     setSuccess("")
 
     try {
-      await dispatch(updateWorkerProfile(formData))
+      // await dispatch(updateWorkerProfile(formData))
       setSuccess("Profile updated successfully!")
       setIsEditing(false)
       window.scrollTo(0, 0)

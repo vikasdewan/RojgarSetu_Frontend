@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getContractorDashboard } from '../../redux/actions';
 
 const ContractorDashboard = () => {
   const dispatch = useDispatch();
@@ -13,7 +12,7 @@ const ContractorDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await dispatch(getContractorDashboard());
+        // const data = await dispatch(getContractorDashboard());
         setDashboardData(data);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);

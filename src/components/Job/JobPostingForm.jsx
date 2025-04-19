@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { createJobPosting } from '../../redux/actions'; // Adjust the path as needed
+// import { createJobPosting } from '../../redux/actions'; // Adjust the path as needed
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import Layout from '../Layout/Layout';
@@ -36,7 +36,7 @@ const JobPostingForm = () => {
 
     try {
       // Dispatch the create job posting action
-      await dispatch(createJobPosting(formData));
+      // await dispatch(createJobPosting(formData));
       toast.success('Job post created successfully!');
       navigate('/contractor/dashboard'); // Redirect after successful submission
     } catch (err) {

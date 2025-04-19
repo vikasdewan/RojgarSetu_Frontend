@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContractorProfile, updateContractorProfile, updateContractorImage } from '../../redux/actions';
+// import { getContractorProfile, updateContractorProfile, updateContractorImage } from '../../redux/actions';
 import { Activity, AlertCircle, CheckCircle, Edit, Eye, Upload, User } from 'lucide-react';
 
 const ContractorProfile = () => {
@@ -44,7 +44,7 @@ const ContractorProfile = () => {
 
   // Fetch contractor profile data
   useEffect(() => {
-    dispatch(getContractorProfile());
+    // dispatch(getContractorProfile());
   }, [dispatch]);
 
   // Set form data from Redux state
@@ -93,7 +93,7 @@ const ContractorProfile = () => {
     try {
       const formDataObj = new FormData();
       formDataObj.append('file', file);
-      const response = await dispatch(updateContractorImage(formDataObj));
+      // const response = await dispatch(updateContractorImage(formDataObj));
       setFormData(prevState => ({
         ...prevState,
         image: response.payload.imageUrl,
@@ -113,7 +113,7 @@ const ContractorProfile = () => {
     setSuccess('');
 
     try {
-      await dispatch(updateContractorProfile(formData));
+      // await dispatch(updateContractorProfile(formData));
       setSuccess('Profile updated successfully!');
       setIsEditing(false);
       window.scrollTo(0, 0);
